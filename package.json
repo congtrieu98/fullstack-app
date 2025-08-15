@@ -54,7 +54,8 @@
     "sharp": "0.32.6",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "@payloadcms/db-sqlite": "3.44.0"
+    "@payloadcms/db-sqlite": "3.44.0",
+    "ui-components": "gitlab:vietan-software/projects/ilotuslandx-document/ui-components#v2.1.19"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

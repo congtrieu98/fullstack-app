@@ -15,7 +15,36 @@ export const Users: CollectionConfig = {
     defaultColumns: ['name', 'email'],
     useAsTitle: 'name',
   },
-  auth: true,
+  // auth: true,
+  auth: {
+    disableLocalStrategy: true,
+    strategies: [
+      {
+        name: 'custom-strategy',
+        // Sử dụng custom strategy thay vì default,
+        authenticate: async ({ payload, headers }) => {
+          const usersQuery = await payload.find({
+            collection: 'users',
+            where: {
+              code: {
+                equals: headers.get('code'),
+              },
+              secret: {
+                equals: headers.get('secret'),
+              },
+            },
+          })
+          console.log('usersQuery:', usersQuery)
+          return {
+            user: null,
+            responseHeaders: new Headers({
+              'some-header': 'my header value',
+            }),
+          }
+        },
+      },
+    ],
+  },
   fields: [
     {
       name: 'name',

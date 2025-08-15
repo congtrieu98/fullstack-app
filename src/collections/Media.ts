@@ -26,6 +26,15 @@ export const Media: CollectionConfig = {
     {
       name: 'alt',
       type: 'text',
+      // access: {
+      //   create: ({ req: { user } }) => {
+      //     // console.log('user:', user)
+      //     return user?.email === 'trieu.nguyen@gmail.com'
+      //   },
+      //   update: ({ req: { user } }) => {
+      //     return user?.email === 'admin@example.com'
+      //   },
+      // },
       //required: true,
     },
     {

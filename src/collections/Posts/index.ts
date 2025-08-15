@@ -1,12 +1,18 @@
 import type { CollectionConfig } from 'payload'
 
 import {
+  AlignFeature,
   BlocksFeature,
+  ChecklistFeature,
+  defaultColors,
+  EXPERIMENTAL_TableFeature,
   FixedToolbarFeature,
   HeadingFeature,
   HorizontalRuleFeature,
   InlineToolbarFeature,
   lexicalEditor,
+  TextStateFeature,
+  UploadFeature,
 } from '@payloadcms/richtext-lexical'
 
 import { authenticated } from '../../access/authenticated'
@@ -92,10 +98,38 @@ export const Posts: CollectionConfig<'posts'> = {
                   return [
                     ...rootFeatures,
                     HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
+                    AlignFeature(),
                     BlocksFeature({ blocks: [Banner, Code, MediaBlock] }),
                     FixedToolbarFeature(),
                     InlineToolbarFeature(),
                     HorizontalRuleFeature(),
+                    ChecklistFeature(),
+                    UploadFeature(),
+                    EXPERIMENTAL_TableFeature(),
+                    TextStateFeature({
+                      // prettier-ignore
+                      state: {
+                        color: {
+                          // Spread only the color definitions from defaultColors, excluding the 'text' group
+                          ...(defaultColors && typeof defaultColors === 'object' && 'text' in defaultColors
+                            ? Object.fromEntries(
+                                Object.entries(defaultColors).filter(([key]) => key !== 'text')
+                              )
+                            : defaultColors),
+                          // fancy gradients!
+                          galaxy: { label: 'Galaxy', css: { background: 'linear-gradient(to right, #0000ff, #ff0000)', color: 'white' } },
+                          sunset: { label: 'Sunset', css: { background: 'linear-gradient(to top, #ff5f6d, #6a3093)' } },
+                        },
+                        // You can have both colored and underlined text at the same time.
+                        // If you don't want that, you should group them within the same key.
+                        // (just like I did with defaultColors and my fancy gradients)
+                        underline: {
+                          'solid': { label: 'Solid', css: { 'text-decoration': 'underline', 'text-underline-offset': '4px' } },
+                          // You'll probably want to use the CSS light-dark() utility.
+                          'yellow-dashed': { label: 'Yellow Dashed', css: { 'text-decoration': 'underline dashed', 'text-decoration-color': 'light-dark(#EAB308,yellow)', 'text-underline-offset': '4px' } },
+                        },
+                      },
+                    }),
                   ]
                 },
               }),
@@ -184,15 +218,15 @@ export const Posts: CollectionConfig<'posts'> = {
         ],
       },
     },
-    {
-      name: 'authors',
-      type: 'relationship',
-      admin: {
-        position: 'sidebar',
-      },
-      hasMany: true,
-      relationTo: 'users',
-    },
+    // {
+    //   name: 'authors',
+    //   type: 'relationship',
+    //   admin: {
+    //     position: 'sidebar',
+    //   },
+    //   hasMany: true,
+    //   relationTo: 'users',
+    // },
     // This field is only used to populate the user data via the `populateAuthors` hook
     // This is because the `user` collection has access control locked to protect user privacy
     // GraphQL will also not return mutated user data that differs from the underlying schema
